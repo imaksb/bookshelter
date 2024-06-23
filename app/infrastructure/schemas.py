@@ -1,20 +1,44 @@
-from pydantic import BaseModel
+from typing import Annotated
+
+from pydantic import BaseModel, EmailStr, Field
 
 
 class UserBase(BaseModel):
-    email: str
+    email: EmailStr
 
 
-class UserCreate(UserBase):
-    username: str
+class UserIn(UserBase):
     password: str
+
+
+class UserCreate(UserIn):
+    username: str
+
+
+class UserInDB(UserBase):
+    hashed_password: str| None = None
+    username: str
+    is_active: bool = True
+    is_admin: bool = False
+
+    class Config:
+        from_attributes = True
 
 
 class UserItem(UserBase):
     user_id: int
     username: str
-    is_active: bool
-    is_admin: bool
+    email: str
 
     class Config:
-        orm_mode = True
+        from_attributes = True
+
+
+class Token(BaseModel):
+    access: str
+    refresh: str
+
+
+class TokenPayload(BaseModel):
+    sub: int | None = None
+    token_type: str

@@ -1,15 +1,21 @@
-from fastapi import APIRouter
+from fastapi import APIRouter, HTTPException
 
-from app.api.deps import SessionDep
+from app.api.deps import SessionDep, CurrentUser
 from app.infrastructure.crud import UserCRUD
+from app.infrastructure.schemas import UserIn, UserItem, UserCreate
 
-router = APIRouter()
+router = APIRouter(prefix="/users")
 
 
-@router.get("/")
-async def root(db: SessionDep):
-    user = UserCRUD(db)
+@router.post("/join")
+async def root(*, crud: SessionDep, user_in: UserCreate):
+    user = await crud.users.get_user_by_email(user_in.email)
+    if user:
+        return HTTPException(status_code=400, detail="The user with this email already exists.")
+    await crud.users.create(user_in)
+    return {"message": "User created successfully."}
 
-    await user.create("test", "", "test", True, False)
 
-    return {"message": "Hello World"}
+@router.get("/me")
+async def read_me(user: CurrentUser):
+    return {"username": user.username}
