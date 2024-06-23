@@ -1,6 +1,6 @@
 from fastapi import APIRouter, HTTPException
 
-from app.api.deps import SessionDep, CurrentUser
+from app.api.deps import SessionDep, CurrentUser, CurrentUserAdmin
 from app.infrastructure.crud import UserCRUD
 from app.infrastructure.schemas import UserIn, UserItem, UserCreate
 
@@ -17,5 +17,5 @@ async def root(*, crud: SessionDep, user_in: UserCreate):
 
 
 @router.get("/me")
-async def read_me(user: CurrentUser):
+async def read_me(user: CurrentUserAdmin):
     return {"username": user.username}

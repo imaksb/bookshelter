@@ -24,8 +24,7 @@ class UserCRUD(BaseCRUD):
         user = user.copy(exclude={"password"})
         user = schemas.UserInDB(**user.dict())
         user.hashed_password = password_hash
-        print(user.__pretty__)
-        print(user.hashed_password)
+
         db_user = User(**user.dict())
 
         self.session.add(db_user)

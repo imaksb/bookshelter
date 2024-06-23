@@ -42,3 +42,14 @@ class Token(BaseModel):
 class TokenPayload(BaseModel):
     sub: int | None = None
     token_type: str
+
+
+class BookBase(BaseModel):
+    name: str
+    author: str
+    image: str | None = None
+    isbn: str | None = None
+
+    class Config:
+        from_attributes = True
+
