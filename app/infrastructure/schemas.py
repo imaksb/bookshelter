@@ -1,6 +1,7 @@
 from typing import Annotated
 
-from pydantic import BaseModel, EmailStr, Field
+from fastapi import UploadFile, Form
+from pydantic import BaseModel, EmailStr, Field, FilePath
 
 
 class UserBase(BaseModel):
@@ -45,11 +46,16 @@ class TokenPayload(BaseModel):
 
 
 class BookBase(BaseModel):
-    name: str
-    author: str
+    name: str = Form(...)
+    author: str = Form(...)
     image: str | None = None
     isbn: str | None = None
 
     class Config:
         from_attributes = True
 
+
+class UserBookIn(BaseModel):
+    user: UserItem
+    book: BookBase
+    is_read: bool = False

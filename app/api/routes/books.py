@@ -1,6 +1,7 @@
-from typing import Sequence
+from typing import Sequence, Annotated
 
-from fastapi import APIRouter
+import aiofiles
+from fastapi import APIRouter, UploadFile, Form
 
 from app.api.deps import SessionDep, CurrentUserAdmin, CurrentUser
 from app.infrastructure.models.books import Book
@@ -11,12 +12,28 @@ router = APIRouter(prefix="/books")
 
 @router.get("/")
 async def get_books(session: SessionDep) -> list[BookBase]:
-    return await session.books.get_books()
+    return await session.books.get_books(1)
 
 
-@router.post("/", dependencies=[CurrentUser])
-async def create_book(session: SessionDep, book_in: BookBase):
-    return await session.books.create_book(book_in)
+@router.get("/{book_id}")
+async def get_book(session: SessionDep, book_id: int):
+    return await session.books.get_book(book_id)
+
+
+@router.post("/")
+async def create_book(session: SessionDep, name: str = Form(min_length=4, max_length=50),
+                      author: str = Form(min_length=5, max_length=50),
+                      isbn: Annotated[str | None, Form(min_length=10, max_length=13)] = None,
+                      image: UploadFile | None = None):
+    path_to_file = f"static/{image.filename}"
+
+    async with aiofiles.open(path_to_file, 'wb') as out_file:
+        content = await image.read()
+        await out_file.write(content)
+
+    book_in = BookBase(name=name, author=author, image=path_to_file, isbn=isbn)
+    await session.books.create_book(book_in)
+    return {"message": "Book created successfully."}
 
 
 @router.delete("/{book_id}", dependencies=[CurrentUserAdmin])

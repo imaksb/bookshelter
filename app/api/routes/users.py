@@ -17,5 +17,5 @@ async def root(*, crud: SessionDep, user_in: UserCreate):
 
 
 @router.get("/me")
-async def read_me(user: CurrentUserAdmin):
+async def read_me(user: CurrentUser):
     return {"username": user.username}

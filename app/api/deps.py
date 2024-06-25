@@ -62,4 +62,4 @@ def get_current_active_admin(current_user: CurrentUser) -> User:
     return current_user
 
 
-CurrentUserAdmin = Annotated[User, Depends(get_current_active_admin)]
+CurrentUserAdmin = Depends(get_current_active_admin)
