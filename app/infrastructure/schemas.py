@@ -1,3 +1,4 @@
+from datetime import datetime
 from typing import Annotated
 
 from fastapi import UploadFile, Form
@@ -35,13 +36,14 @@ class UserItem(UserBase):
         from_attributes = True
 
 
-class Token(BaseModel):
+class Tokens(BaseModel):
     access: str
     refresh: str
 
 
 class TokenPayload(BaseModel):
     sub: int | None = None
+    exp: datetime | None = None
     token_type: str
 
 

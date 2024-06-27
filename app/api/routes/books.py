@@ -20,7 +20,7 @@ async def get_book(session: SessionDep, book_id: int):
     return await session.books.get_book(book_id)
 
 
-@router.post("/")
+@router.post("/", status_code=201)
 async def create_book(session: SessionDep, name: str = Form(min_length=4, max_length=50),
                       author: str = Form(min_length=5, max_length=50),
                       isbn: Annotated[str | None, Form(min_length=10, max_length=13)] = None,
