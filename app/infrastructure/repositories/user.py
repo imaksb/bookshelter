@@ -1,13 +1,13 @@
-from sqlalchemy import insert, select
+from sqlalchemy import insert, select, update
 
 from app.core.security import get_hash_password, verify_password
 from app.infrastructure import schemas
 
-from app.infrastructure.crud.base import BaseCRUD
+from app.infrastructure.repositories.base import BaseRepository
 from app.infrastructure.models.users import User
 
 
-class UserCRUD(BaseCRUD):
+class UserRepository(BaseRepository):
     async def get_user_by_user_id(self, user_id: int) -> User:
         select_stmt = select(User).where(User.user_id == user_id)
         result = await self.session.execute(select_stmt)
@@ -17,6 +17,13 @@ class UserCRUD(BaseCRUD):
         select_stmt = select(User).where(User.email == email)
         result = await self.session.execute(select_stmt)
         return result.scalars().first()
+
+    async def update_user_active_status(self, email: str, new_status: int = 1):
+        update_stmt = update(User).where(User.email == email).values(
+            is_active=new_status
+        )
+        await self.session.execute(update_stmt)
+        await self.session.commit()
 
     async def create(self, user: schemas.UserIn):
         password_hash = get_hash_password(user.password)

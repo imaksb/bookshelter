@@ -15,6 +15,6 @@ async def add_book(session: SessionDep, user: CurrentUser, book_id: int, is_read
         raise HTTPException(status_code=status.HTTP_404_NOT_FOUND, detail="Book not found")
 
     note_obj = UserBookIn(user=user, book=book, is_read=is_read)
-    await session.user_books.add_user_book(note_obj)
+    await session.user_books.create_one(note_obj)
 
     return {"message": "Book added to your library"}

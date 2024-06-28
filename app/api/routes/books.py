@@ -32,7 +32,7 @@ async def create_book(session: SessionDep, name: str = Form(min_length=4, max_le
         await out_file.write(content)
 
     book_in = BookBase(name=name, author=author, image=path_to_file, isbn=isbn)
-    await session.books.create_book(book_in)
+    await session.books.create_one(book_in)
     return {"message": "Book created successfully."}
 
 

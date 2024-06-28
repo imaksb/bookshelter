@@ -9,7 +9,7 @@ from starlette import status
 
 from app.core import security
 from app.core.config import settings
-from app.infrastructure.crud.requests import RequestsCRUD
+from app.infrastructure.repositories.requests import RequestsCRUD
 from app.infrastructure.database import create_session_pool
 from app.infrastructure.models.users import User
 from app.infrastructure.schemas import TokenPayload
@@ -46,7 +46,7 @@ async def get_current_user(session: SessionDep, token: TokenDep) -> HTTPExceptio
     if not user:
         return HTTPException(status_code=status.HTTP_404_NOT_FOUND, detail="User not found")
     if not user.is_active:
-        return HTTPException(status_code=status.HTTP_401_UNAUTHORIZED, detail="Inactive user")
+        return HTTPException(status_code=status.HTTP_401_UNAUTHORIZED, detail="Inactive user please confirm email")
 
     return user
 

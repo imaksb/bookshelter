@@ -1,22 +1,22 @@
 import secrets
 from typing import Literal
 from sqlalchemy.engine.url import URL
-from pydantic import computed_field, PostgresDsn
+from pydantic import computed_field, PostgresDsn, Field
 from pydantic_settings import BaseSettings, SettingsConfigDict
 
 
 class Settings(BaseSettings):
     model_config = SettingsConfigDict(
-        env_file=".env", env_ignore_empty=True
+        env_file=".env.dev", env_ignore_empty=True
     )
     API_V1_STR: str = "/api/v1"
-    SECRET_KEY: str = "IOwHcoGQChEJgA0X27sI5VutIr3Kt_7Sf2dJIdlmUNU" # secrets.token_urlsafe(32)
+    SECRET_KEY: str = secrets.token_urlsafe(32)
 
     ACCESS_TOKEN_EXPIRE_MINUTES: int = 60 * 24 * 8
     REFRESH_TOKEN_EXPIRE_MINUTES: int = 60 * 24 * 8 * 2
     ALGORITHM: str = "HS256"
 
-    DOMAIN: str = "localhost"
+    DOMAIN: str = "localhost:8082"
     ENVIRONMENT: Literal["development", "production"] = "development"
 
     @computed_field
@@ -32,6 +32,14 @@ class Settings(BaseSettings):
     DB_USER: str = "postgres"
     DB_PASSWORD: str = "postgres"
     RESET_PASSWORD_TOKEN_EXPIRE_HOURS: int = 24
+
+    SMTP_PASSWORD: str
+    SMTP_EMAIL: str
+    SMTP_HOST: str
+    SMTP_PORT: int
+
+    SOME_VARIABLE: str = Field()
+
     @computed_field
     @property
     def sqlalchemy_database_uri(self) -> PostgresDsn:

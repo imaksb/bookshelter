@@ -9,5 +9,5 @@ class User(Base, TableNameMixin):
     username: Mapped[str] = mapped_column(VARCHAR(50), nullable=False, unique=True)
     email: Mapped[str] = mapped_column(VARCHAR(50), nullable=False, unique=True)
     hashed_password: Mapped[str] = mapped_column(VARCHAR(255), nullable=False)
-    is_active: Mapped[bool] = mapped_column(Boolean, nullable=False, default=True)
+    is_active: Mapped[bool] = mapped_column(Boolean, nullable=False, default=False)
     is_admin: Mapped[bool] = mapped_column(Boolean, nullable=False, default=False)

@@ -61,3 +61,9 @@ class UserBookIn(BaseModel):
     user: UserItem
     book: BookBase
     is_read: bool = False
+
+
+class EmailTokenPayload(BaseModel):
+    sub: str
+    email: EmailStr
+    token_type: str

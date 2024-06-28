@@ -41,12 +41,12 @@ async def refresh_token(*, refresh: str) -> Tokens:
 
 
 # @router.post("/reset-password")
-# async def reset_password(*, crud: SessionDep, email: EmailStr | None = None):
-#     user = await crud.users.get_user_by_email(email)
+# async def reset_password(*, repositories: SessionDep, email: EmailStr | None = None):
+#     user = await repositories.users.get_user_by_email(email)
 #
 #     if not user:
 #         return HTTPException(status_code=400, detail="User not found")
 #
-#     await crud.users.reset_password(user, user_in.password)
+#     await repositories.users.reset_password(user, user_in.password)
 #
 #     return {"message": "Password reset successfully"}

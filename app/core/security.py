@@ -1,7 +1,11 @@
 from datetime import timedelta, datetime
 from typing import Any
 import jwt
+from fastapi import HTTPException
+from jwt import InvalidTokenError
 from passlib.context import CryptContext
+from pydantic import ValidationError
+from starlette import status
 
 from app.core.config import settings
 from app.infrastructure.schemas import TokenPayload, Tokens
@@ -34,9 +38,26 @@ def get_new_access_token(token: str):
     return Tokens(access=access, refresh=refresh)
 
 
-def generate_reset_token(subject: str | any):
-    expire = datetime.now() + timedelta(hours=settings.RESET_PASSWORD_TOKEN_EXPIRE_HOURS)
-    to_encode = {"exp": expire, "sub": str(subject), "token_type": "reset_password", "nbf": datetime.now()}
+def generate_confirm_email_token(subject: str | Any, email):
+    to_encode = {"sub": str(subject),
+                 "email": str(email),
+                 "token_type": "reset_password"}
+    encoded_jwt = jwt.encode(to_encode, settings.SECRET_KEY, algorithm=ALGORITHM)
+    return encoded_jwt
+
+
+def get_payload(token: str):
+    try:
+        payload = jwt.decode(
+            token, settings.SECRET_KEY,
+            algorithms=[ALGORITHM],
+        )
+    except (InvalidTokenError, ValidationError) as e:
+        print(e)
+        raise HTTPException(status_code=status.HTTP_400_BAD_REQUEST,
+                            detail="Not valid token")
+
+    return payload
 
 
 def get_hash_password(password: str):
