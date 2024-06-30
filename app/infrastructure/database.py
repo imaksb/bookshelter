@@ -1,6 +1,7 @@
 from sqlalchemy.ext.asyncio import create_async_engine, AsyncSession, async_sessionmaker
 from app.core.config import settings
 from app.infrastructure.models.base import Base
+from redis import asyncio as aioredis
 
 
 def create_engine():
@@ -17,3 +18,5 @@ async def create_session_pool():
     session_pool = async_sessionmaker(bind=engine,
                                       expire_on_commit=False)
     return session_pool
+
+redis = aioredis.from_url("redis://localhost", encoding="utf8", decode_responses=True)

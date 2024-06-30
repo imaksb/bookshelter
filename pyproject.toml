@@ -17,6 +17,10 @@ emails = "^0.6"
 aiofiles = "^23.2.1"
 alembic = "^1.13.1"
 pydantic-settings = "^2.3.4"
+fastapi-cache2 = "^0.2.1"
+setuptools = "^70.1.1"
+redis = "^5.0.7"
+pyotp = "^2.9.0"
 
 
 [build-system]

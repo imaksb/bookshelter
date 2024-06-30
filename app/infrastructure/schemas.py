@@ -67,3 +67,8 @@ class EmailTokenPayload(BaseModel):
     sub: str
     email: EmailStr
     token_type: str
+
+
+class NewPassword(UserBase):
+    token: str
+    new_password: str = Field(min_length=10)

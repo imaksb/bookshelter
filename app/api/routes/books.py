@@ -2,6 +2,7 @@ from typing import Sequence, Annotated
 
 import aiofiles
 from fastapi import APIRouter, UploadFile, Form
+from fastapi_cache.decorator import cache
 
 from app.api.deps import SessionDep, CurrentUserAdmin, CurrentUser
 from app.infrastructure.models.books import Book
@@ -11,6 +12,7 @@ router = APIRouter(prefix="/books")
 
 
 @router.get("/")
+@cache(expire=60)
 async def get_books(session: SessionDep) -> list[BookBase]:
     return await session.books.get_books(1)
 

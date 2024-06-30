@@ -16,14 +16,14 @@ class Settings(BaseSettings):
     REFRESH_TOKEN_EXPIRE_MINUTES: int = 60 * 24 * 8 * 2
     ALGORITHM: str = "HS256"
 
-    DOMAIN: str = "localhost:8082"
+    DOMAIN: str = "localhost"
     ENVIRONMENT: Literal["development", "production"] = "development"
 
     @computed_field
     @property
     def server_host(self) -> str:
         if self.ENVIRONMENT == "development":
-            return f"http://{self.DOMAIN}:8000"
+            return f"http://{self.DOMAIN}:8083"
         return f"https://{self.DOMAIN}"
 
     DB_NAME: str = "postgres"
@@ -37,8 +37,6 @@ class Settings(BaseSettings):
     SMTP_EMAIL: str
     SMTP_HOST: str
     SMTP_PORT: int
-
-    SOME_VARIABLE: str = Field()
 
     @computed_field
     @property

@@ -44,3 +44,12 @@ class UserRepository(BaseRepository):
         if not verify_password(user_in.password, user.hashed_password):
             return False
         return user
+
+    async def update_password(self, email: str, new_password: str):
+        password_hash = get_hash_password(new_password)
+
+        update_stmt = update(User).where(User.email == email).values(hashed_password=password_hash)
+        await self.session.execute(update_stmt)
+        await self.session.commit(
+
+        )
