@@ -9,14 +9,15 @@ def create_engine():
                                future=True)
 
 
-async def create_session_pool():
+def create_session_pool():
     engine = create_engine()
 
-    async with engine.begin() as conn:
-        await conn.run_sync(Base.metadata.create_all)
+    # async with engine.begin() as conn:
+    #     await conn.run_sync(Base.metadata.create_all)
 
     session_pool = async_sessionmaker(bind=engine,
                                       expire_on_commit=False)
     return session_pool
 
 redis = aioredis.from_url("redis://localhost", encoding="utf8", decode_responses=True)
+SessionPool = create_session_pool()
